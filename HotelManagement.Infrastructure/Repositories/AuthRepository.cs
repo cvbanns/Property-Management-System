@@ -76,7 +76,7 @@ namespace HotelManagement.Infrastructure.Repositories
                 UserName = user.UserName,
                 Email = user.Email,
                 EmailConfirmed = false,
-                Phone = user.Phone,
+                PhoneNumber = user.Phone,
                 Age = user.Age,
                 Avatar = "www.xyz.com",
                 Gender = user.Gender,
