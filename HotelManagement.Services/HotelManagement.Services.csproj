@@ -7,11 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
+    <PackageReference Include="CloudinaryDotNet" Version="1.20.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+    <PackageReference Include="MimeKit" Version="3.4.3" />
+    <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.1.0" />
+    <ProjectReference Include="..\HotelManagement.Core\HotelManagement.Core.csproj" />
   </ItemGroup>
 
 </Project>
