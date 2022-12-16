@@ -107,15 +107,14 @@ namespace HotelManagement.Api
                 });
             });
 
-            //EmailService
+            //EmailService registration
             var emailConfig = builder.Configuration
                .GetSection("EmailConfiguration")
                .Get<EmailConfiguration>();
             builder.Services.AddSingleton(emailConfig);
             builder.Services.AddScoped<IEmailService, EmailService>();
+            //Cloudinary registration
             builder.Services.AddSingleton<ICloudinaryService, CloudinaryService>();
-
-            //Cloudinary
             var cloudName = builder.Configuration.GetValue<string>("AccountSettings:CloudName");
             var apiKey = builder.Configuration.GetValue<string>("AccountSettings:ApiKey");
             var apiSecret = builder.Configuration.GetValue<string>("AccountSettings:ApiSecret");
