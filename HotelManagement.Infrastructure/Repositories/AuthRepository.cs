@@ -2,12 +2,14 @@
 using HotelManagement.Core.DTOs;
 using HotelManagement.Core.IRepositories;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,7 +25,7 @@ namespace HotelManagement.Infrastructure.Repositories
         {
             _userManager = userManager;
             _configuration = configuration;
-        }
+        }       
 
         public async Task<object> Login(LoginDTO model)
         {
@@ -87,6 +89,22 @@ namespace HotelManagement.Infrastructure.Repositories
             var result = await _userManager.CreateAsync(newUser, user.Password);
             if (result.Succeeded) return "Successfully registered";
             return "Registration failed: " + result.Errors;
+        }
+
+        public async Task<object?> ChangePassword(ChangePasswordDTO changePasswordDTO, string userId)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user != null)
+            {
+               var result =  await _userManager.ChangePasswordAsync(user, changePasswordDTO.CurrentPassword, changePasswordDTO.NewPassword);
+                if (result.Succeeded)
+                {
+                    return user;
+                }
+                return null;
+            }
+            return null;
+            
         }
     }
 }

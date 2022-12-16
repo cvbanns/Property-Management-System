@@ -24,6 +24,12 @@ namespace HotelManagement.Services.Services
             _authRepository = authRepository;
         }
 
+        public async Task<object> ChangePassword(ChangePasswordDTO changePasswordDTO, string UserId)
+        {
+            var response = await _authRepository.ChangePassword(changePasswordDTO, UserId);
+            return response;
+        }
+
         public async Task<object> Login(LoginDTO model)
         {
             var response = await _authRepository.Login(model);

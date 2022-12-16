@@ -2,6 +2,7 @@
 using HotelManagement.Core.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace HotelManagement.Api.Controllers
 {
@@ -28,6 +29,22 @@ namespace HotelManagement.Api.Controllers
             var login = await _authService.Login(model);
             if (login.ToString().Contains("Wrong")) return BadRequest(login);
             return Ok(login);
+        }
+
+        [HttpPost("Change-Password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO changePasswordDTO)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var changePassword = await _authService.ChangePassword(changePasswordDTO, userId);
+            if (changePassword != null)
+            {
+                return Ok("Password Chnaged Sucessfuly!");
+            }
+            return BadRequest(changePasswordDTO);
         }
     }
 }
