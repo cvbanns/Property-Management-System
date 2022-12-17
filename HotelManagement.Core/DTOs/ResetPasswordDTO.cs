@@ -10,15 +10,8 @@ namespace HotelManagement.Core.DTOs
     public class ResetPasswordDTO
     {
         [Required(ErrorMessage ="UserName is Required")]
-        public string Username { get; set; }       
+        public string Email { get; set; }    
 
-        [Required(ErrorMessage = "New password is Required")]
-        public string NewPassword { get; set; }
-
-        [Required(ErrorMessage = "Comfirm Password is Required")]
-        [Compare("NewPassword", ErrorMessage = "Password does not match")]
-        public string ConfirmNewPassword { get; set; }
-
-        public string Token { get; set; }
+       
     }
 }

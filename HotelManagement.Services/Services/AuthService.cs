@@ -24,11 +24,17 @@ namespace HotelManagement.Services.Services
             _authRepository = authRepository;
         }
 
-        public async Task<object> ChangePassword(ChangePasswordDTO changePasswordDTO, string UserId)
+        public async Task<object> ChangePassword(ChangePasswordDTO model)
         {
-            var response = await _authRepository.ChangePassword(changePasswordDTO, UserId);
+            if (model.ConfirmNewPassword != model.NewPassword) return "Password does not match";
+            var response = await _authRepository.ChangePassword(model);
             return response;
         }
+
+        //public Task<object> ForgottenPasswordAsync(ResetPasswordDTO resetPasswordDTO, string Email)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public async Task<object> Login(LoginDTO model)
         {

@@ -101,6 +101,7 @@ namespace HotelManagement.Api
                     }
                 });
             });
+            builder.Services.AddHttpContextAccessor();
 
 
             var app = builder.Build();

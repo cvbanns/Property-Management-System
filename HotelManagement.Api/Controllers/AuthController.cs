@@ -1,8 +1,8 @@
-﻿using HotelManagement.Core.DTOs;
+﻿using HotelManagement.Core.Domains;
+using HotelManagement.Core.DTOs;
 using HotelManagement.Core.IServices;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace HotelManagement.Api.Controllers
 {
@@ -11,9 +11,11 @@ namespace HotelManagement.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly UserManager<User> _userManager;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, UserManager<User> userManager)
         {
+            _userManager = userManager;
             _authService = authService;
         }
         [HttpPost("Register")]
@@ -32,19 +34,22 @@ namespace HotelManagement.Api.Controllers
         }
 
         [HttpPost("Change-Password")]
-        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO changePasswordDTO)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var changePassword = await _authService.ChangePassword(changePasswordDTO, userId);
-            if (changePassword != null)
-            {
-                return Ok("Password Chnaged Sucessfuly!");
-            }
-            return BadRequest(changePasswordDTO);
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO model)
+        {            
+            var result = await _authService.ChangePassword(model);
+            if(result.ToString().Contains("login")) return Unauthorized(result);
+            if(result.ToString().Contains("character")) return BadRequest(result);
+            return Ok(result);
         }
+
+        [HttpPost("Reset-Password-Token")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null) return BadRequest("Email is not associated with any account");
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            return Ok(new {token = token});
+        }       
     }
 }

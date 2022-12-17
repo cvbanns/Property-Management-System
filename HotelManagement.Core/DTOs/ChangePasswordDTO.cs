@@ -9,8 +9,7 @@ namespace HotelManagement.Core.DTOs
 {
     public class ChangePasswordDTO
     {
-        //[Required(ErrorMessage ="UserName is Required")]
-        //public string UserName { get; set; }
+        
 
         [Required(ErrorMessage = "Current Password is Required")]
         public string CurrentPassword { get; set; }

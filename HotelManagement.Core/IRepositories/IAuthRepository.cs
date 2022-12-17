@@ -11,6 +11,6 @@ namespace HotelManagement.Core.IRepositories
     {
         public Task<object> Login(LoginDTO model);
         public Task<object> Register(RegisterDTO user);
-        public Task<object?> ChangePassword(ChangePasswordDTO changePasswordDTO, string UserId);
+        public Task<object> ChangePassword(ChangePasswordDTO changePasswordDTO);
     }
 }
