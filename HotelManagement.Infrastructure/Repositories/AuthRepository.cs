@@ -1,6 +1,7 @@
 ﻿using HotelManagement.Core.Domains;
 using HotelManagement.Core.DTOs;
 using HotelManagement.Core.IRepositories;
+using HotelManagement.Core.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -24,24 +25,18 @@ namespace HotelManagement.Infrastructure.Repositories
         private readonly UserManager<User> _userManager;
         private readonly IConfiguration _configuration;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IEmailService _emailService;
 
-        public AuthRepository(UserManager<User> userManager, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        public AuthRepository(UserManager<User> userManager, IConfiguration configuration, IHttpContextAccessor httpContextAccessor, IEmailService emailService)
         {            
             _userManager = userManager;
             _configuration = configuration;
             _httpContextAccessor = httpContextAccessor;
+            _emailService = emailService;
         }
 
         public string GetId() => _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        public async Task<object> ChangePassword(ChangePasswordDTO changePasswordDTO)
-        {
-            var user = await _userManager.FindByIdAsync(GetId());
-            if(user == null) return "Please login to change password";
-            var result = await _userManager.ChangePasswordAsync(user, changePasswordDTO.CurrentPassword, changePasswordDTO.NewPassword);
-            if (!result.Succeeded) return "Unable to change password: password should contain a Capital, number, character and minimum length of 8";
-            return "Password changed succesffully";
-        }
         public async Task<object> Login(LoginDTO model)
         {
             JwtSecurityToken token = null;
@@ -106,9 +101,44 @@ namespace HotelManagement.Infrastructure.Repositories
             return "Registration failed: " + result.Errors;
         }
 
-        public async Task<object> ResetPassword(ResetPasswordDTO model)
+        public async Task<object> ChangePassword(ChangePasswordDTO changePasswordDTO)
         {
-            return "Password Changed Successful";
+            var user = await _userManager.FindByIdAsync(GetId());
+            if (user == null) return "Please login to change password";
+            var result = await _userManager.ChangePasswordAsync(user, changePasswordDTO.CurrentPassword, changePasswordDTO.NewPassword);
+            if (!result.Succeeded) return "Unable to change password: password should contain a Capital, number, character and minimum length of 8";
+            return "Password changed succesffully";
+        }
+
+        public async Task<object> ForgottenPassword(ResetPasswordDTO model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if(user == null)
+            {
+                return ("The Email Provided is not associated with a user account");
+            }
+
+            var resetPasswordToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var emailMsg = new EmailMessage(new string[] { user.Email }, "Reset your password", $"Please Follow the Link to reset your Password: https://localhost:7255/api/Auth/Reset-Update-Password?token={resetPasswordToken}");
+            await _emailService.SendEmailAsync(emailMsg);
+            return "A password reset Link has been sent to your email address";
+        }
+
+        public async Task<object> ResetPassword(UpdatePasswordDTO model)
+        {
+            
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if(user == null)
+            {
+                return "The Email Provided is not associated with a user account.";
+            }
+            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                return "The Provided Reset Token is Invalid or Has expired";
+            } 
+            return "Password Reset Successfully";
         }
 
     }

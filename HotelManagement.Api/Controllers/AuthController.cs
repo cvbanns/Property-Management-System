@@ -44,9 +44,16 @@ namespace HotelManagement.Api.Controllers
 
         [HttpPost("Reset-Password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO model)
+        {            
+            var result = await _authService.ForgottenPassword(model);
+            return Ok(result);
+        }
+
+        [HttpPost("Reset-Update-Password")]
+        public async Task<IActionResult> ResetUpdatePassword([FromBody] UpdatePasswordDTO model, string Token)
         {
-            
-            return Ok("Not yet implemented");
-        }       
+            var result = await _authService.ResetPasswordAsync(model);
+            return Ok(result);
+        }
     }
 }

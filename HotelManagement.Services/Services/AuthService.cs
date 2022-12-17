@@ -31,9 +31,10 @@ namespace HotelManagement.Services.Services
             return response;
         }
 
-        public Task<object> ResetPasswordAsync(ResetPasswordDTO model)
+        public async Task<object> ResetPasswordAsync(UpdatePasswordDTO model)
         {
-            throw new NotImplementedException();
+            var response = await _authRepository.ResetPassword(model);
+            return response;
         }
 
         public async Task<object> Login(LoginDTO model)
@@ -45,6 +46,12 @@ namespace HotelManagement.Services.Services
         public async Task<object> Register(RegisterDTO user)
         {
             var response = await _authRepository.Register(user);
+            return response;
+        }
+
+        public async Task<object> ForgottenPassword(ResetPasswordDTO model)
+        {
+            var response = await _authRepository.ForgottenPassword(model);
             return response;
         }
     }
