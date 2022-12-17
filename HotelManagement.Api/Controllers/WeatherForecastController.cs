@@ -1,3 +1,4 @@
+using HotelManagement.Core.IServices;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagement.Api.Controllers

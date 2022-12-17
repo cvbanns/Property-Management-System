@@ -1,11 +1,16 @@
+using CloudinaryDotNet;
+using Coudinary.Services;
 using FluentValidation;
 using HotelManagement.Core.Domains;
 using HotelManagement.Core.IRepositories;
+using HotelManagement.Core.IServices;
+using HotelManagement.Core.DTOs;
 using HotelManagement.Core.IServices;
 using HotelManagement.Infrastructure.Context;
 using HotelManagement.Infrastructure.Repositories;
 using HotelManagement.Services.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using HotelManagement.Services.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -102,6 +107,24 @@ namespace HotelManagement.Api
                 });
             });
             builder.Services.AddHttpContextAccessor();
+
+            //EmailService registration
+            var emailConfig = builder.Configuration
+               .GetSection("EmailConfiguration")
+               .Get<EmailConfiguration>();
+            builder.Services.AddSingleton(emailConfig);
+            builder.Services.AddScoped<IEmailService, EmailService>();
+            //Cloudinary registration
+            builder.Services.AddSingleton<ICloudinaryService, CloudinaryService>();
+            var cloudName = builder.Configuration.GetValue<string>("AccountSettings:CloudName");
+            var apiKey = builder.Configuration.GetValue<string>("AccountSettings:ApiKey");
+            var apiSecret = builder.Configuration.GetValue<string>("AccountSettings:ApiSecret");
+
+            if (new[] { cloudName, apiKey, apiSecret }.Any(string.IsNullOrWhiteSpace))
+            {
+                throw new ArgumentException("Please specify Cloudinary account details!");
+            }
+            builder.Services.AddSingleton(new Cloudinary(new Account(cloudName, apiKey, apiSecret)));
 
 
             var app = builder.Build();
