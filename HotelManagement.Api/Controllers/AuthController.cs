@@ -1,7 +1,10 @@
-﻿using HotelManagement.Core.DTOs;
+﻿using HotelManagement.Core.Domains;
+using HotelManagement.Core.DTOs;
 using HotelManagement.Core.IServices;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 
 namespace HotelManagement.Api.Controllers
 {
@@ -10,10 +13,11 @@ namespace HotelManagement.Api.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
-
-        public AuthController(IAuthService authService)
+        private readonly UserManager<User> _userManager;
+        public AuthController(IAuthService authService, UserManager<User> userManager)
         {
             _authService = authService;
+            _userManager = userManager;
         }
         [HttpPost("Register")]
         public async Task<IActionResult> Register(RegisterDTO user)
@@ -28,6 +32,12 @@ namespace HotelManagement.Api.Controllers
             var login = await _authService.Login(model);
             if (login.ToString().Contains("Wrong")) return BadRequest(login);
             return Ok(login);
+        }
+        [HttpPost("Verify Email with Token")]
+        public async Task<IActionResult> VerifyEmail(string token)
+        {
+            var user = await _userManager.ConfirmEmailAsync(new Core.Domains.User(), token);
+            return Ok(user);
         }
     }
 }
