@@ -42,14 +42,11 @@ namespace HotelManagement.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPost("Reset-Password-Token")]
+        [HttpPost("Reset-Password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO model)
         {
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null) return BadRequest("Email is not associated with any account");
-
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            return Ok(new {token = token});
+            
+            return Ok("Not yet implemented");
         }       
     }
 }

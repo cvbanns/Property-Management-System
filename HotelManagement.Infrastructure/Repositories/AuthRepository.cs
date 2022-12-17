@@ -106,25 +106,10 @@ namespace HotelManagement.Infrastructure.Repositories
             return "Registration failed: " + result.Errors;
         }
 
-        //public async Task<object?> ChangePassword(ChangePasswordDTO changePasswordDTO , string userId)
-        //{
-            
-
-
-        //    var user = await _userManager.FindByEmailAsync(changePasswordDTO.UserName);
-        //    if (user == null)
-        //    {
-        //        return "User not found";
-        //    }
-
-        //    var result = await _userManager.ChangePasswordAsync(user, changePasswordDTO.CurrentPassword, changePasswordDTO.NewPassword);
-        //    if (!result.Succeeded)
-        //    {
-        //        return "Password Change didnt succeed";
-        //    }
-        //    return "Password Changed Successful";
-
-        //}       
+        public async Task<object> ResetPassword(ResetPasswordDTO model)
+        {
+            return "Password Changed Successful";
+        }
 
     }
 }

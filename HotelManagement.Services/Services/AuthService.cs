@@ -31,10 +31,10 @@ namespace HotelManagement.Services.Services
             return response;
         }
 
-        //public Task<object> ForgottenPasswordAsync(ResetPasswordDTO resetPasswordDTO, string Email)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public Task<object> ResetPasswordAsync(ResetPasswordDTO model)
+        {
+            throw new NotImplementedException();
+        }
 
         public async Task<object> Login(LoginDTO model)
         {
