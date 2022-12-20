@@ -30,3 +30,4 @@ namespace HotelManagement.Application.Utility
         }
     }
 }
+
