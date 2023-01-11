@@ -45,6 +45,13 @@ namespace HotelManagement.Api.Controllers
             if (result.Succeeded == false) return BadRequest(result);
             return Ok(result);
         }
+        [HttpDelete("Delete-Manager")]
+        public async Task<IActionResult> DeleteManager([FromForm] string managerId)
+        {
+            var response = await _managerRequestService.DeleteManager(managerId);
+            if(response.Succeeded == false) return BadRequest(response);
+            return Ok(response);
+        }
 
     }
 }

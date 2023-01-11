@@ -12,5 +12,6 @@ namespace HotelManagement.Core.IServices
         Task<Response<string>> ManagerRequest(ManagerRequestDTO managerRequest);
         Task<Response<string>> AdminSendInvite(string requestId);
         Task<Response<string>> ManagerAcceptInvite(string token);
+        Task<Response<bool>> DeleteManager(string managerId);
     }
 }

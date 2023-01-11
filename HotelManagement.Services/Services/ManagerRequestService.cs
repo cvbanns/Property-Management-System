@@ -123,7 +123,27 @@ namespace HotelManagement.Services.Services
                 StatusCode=(int)HttpStatusCode.Accepted
             };
         }
+        public async Task<Response<bool>> DeleteManager(string managerId)
+        {
+            try
+            {
+                var manager = await _unitOfWork.managerRepository.GetByIdAsync(x => x.AppUser.Id == managerId);
+                if(manager == null)
+                {
+                    return Response<bool>.Fail("manager does not exist", 400);
+                }
+                 await _unitOfWork.managerRepository.DeleteAsync(manager);
+                _unitOfWork.SaveChanges();
 
+                return Response<bool>.Success("manager has been deleted", true ,200);
+
+            }
+            catch (Exception ex)
+            {
+                return Response<bool>.Fail( ex.Message);
+
+            }
+        }
         
     }
 }
