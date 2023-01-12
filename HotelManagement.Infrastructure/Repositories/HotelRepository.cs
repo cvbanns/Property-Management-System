@@ -20,7 +20,15 @@ namespace HotelManagement.Infrastructure.Repositories
 
             await AddAsync(hotel);
         }
+        public async Task DeleteAsync(Hotel entity)
+        {
+             _hotelDbContext.Remove(entity);
+        }
 
+        public async Task SaveChangesAsync()
+        {
+            await _hotelDbContext.SaveChangesAsync();
+        }
         public async Task UpdateAsync(Hotel hotel)
         {
             _hotelDbContext.Entry(hotel).State = EntityState.Modified;

@@ -7,6 +7,7 @@ using HotelManagement.Core.IServices;
 using HotelManagement.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Net;
 
 namespace HotelManagement.Services.Services
 {
@@ -160,21 +161,38 @@ namespace HotelManagement.Services.Services
 
         public async Task<Response<string>> DeleteHotelById(string id)
         {
+            var response = new Response<string>();
             try
             {
-                var hotelTodelete = _unitOfWork.hotelRepository.DeleteAsync<string>(id);
-                if (hotelTodelete == null)
-                    return Response<string>.Fail($"Hotel with {id} doesnot exist");
-                _unitOfWork.SaveChanges();
-                return Response<string>.Success($"Hotel with {id} Sucessful Deleted", id);
- 
-    }
+                //check if the Id is null
+                if (string.IsNullOrEmpty(id))
+                {
+                    //if the id is null, then the Api response should return a badrequest
+                    //response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    Response<string>.Fail("unsuccessful", 400);
+                }
+                var result = await _unitOfWork.hotelRepository.GetByIdAsync(x => x.Id == id);
+                //Check to see if the retrieved Hotel to be deleted is null
+                if (result == null)
+                {
+                    //if the retrieved Hotel is null, then the response status code should be not Found
+                    response.StatusCode = (int)HttpStatusCode.NotFound;
+                    Response<string>.Fail("Not Found", 400);
+                }
+                await _unitOfWork.hotelRepository.DeleteAsync(result);
+                await _unitOfWork.hotelRepository.SaveChangesAsync();
+                response.Data = null;
+                response.StatusCode = (int)HttpStatusCode.OK;
+                response.Succeeded = true;
+                response.Message = $"Hotel {result.Name} was Deleted successfull";
+                return response;
+            }
             catch (Exception ex)
             {
 
                 return Response<string>.Fail(ex.Message);
             };
-           
+
         }
 
         public async Task<Response<UpdateHotelDto>> PatchHotel(string Id, UpdateHotelDto update)

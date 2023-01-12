@@ -12,5 +12,7 @@ namespace HotelManagement.Core.IRepositories
     {
         void AddHotel(string Manager_ID, Hotel hotel);
         void UpdateAsync(Hotel hotel);
+        Task DeleteAsync(Hotel entity);
+        Task SaveChangesAsync();
     }
 }
