@@ -8,12 +8,12 @@ namespace HotelManagement.Core.IServices
 {
     public interface IHotelStatisticsService
     {
-        Task<int> GetTotalNumberOfHotels();
+        Task<Response<string>> GetTotalNumberOfHotels();
         // Task<int> GetTotalNumberOfRooms(Hotel hotel);
-        Task<int> GetTotalNumberOfRooms(string Id);
+        Task<Response<string>> GetTotalNumberOfRooms(string Id);
         // Task<int> GetTotalNumberOfRoomsOccupied(Hotel hotel);
-        Task<int> GetTotalNumberOfRoomsOccupied(string Id);
+        Task<Response<string>> GetTotalNumberOfRoomsOccupied(string Id);
         // Task<int> GetTotalNumberOfRoomsUnoccupied(Hotel hotel);
-        Task<int> GetTotalNumberOfRoomsUnoccupied(string Id);
+        Task<Response<string>> GetTotalNumberOfRoomsUnoccupied(string Id);
     }
 }
