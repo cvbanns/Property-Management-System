@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace HotelManagement.Core.IRepositories
 {
-    public interface IRoomRepository: IGenericRepository<Room>
+    public interface IRoomTypeRepository : IGenericRepository<RoomType>
     {
-        void Add(string Roomtype_ID,string Hotel_Name, Room room);        
+        void AddRoomType(string Hotel_Id, RoomType roomType);
     }
 }

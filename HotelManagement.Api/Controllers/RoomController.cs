@@ -1,4 +1,5 @@
-﻿using HotelManagement.Core.DTOs;
+﻿using HotelManagement.Core.Domains;
+using HotelManagement.Core.DTOs;
 using HotelManagement.Core.IServices;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,5 +37,25 @@ namespace HotelManagement.Api.Controllers
             var room = await _roomService.GetSingleRoom(Id);
             return room.Succeeded ? Ok(room) : BadRequest(room.Message);
         }
+
+        [HttpPost("add-roomtype")]
+        public async Task<IActionResult> AddRoomType(string Hotel_Id, [FromBody] RoomTypeDTO roomType)
+        {
+            if(roomType == null) return BadRequest("Room Type not Created");
+            var result = await _roomService.AddRoomType(Hotel_Id, roomType);
+            return Ok(result);          
+           
+        }
+
+        [HttpPut("update-room")]
+        public async Task<IActionResult> UpdateRoom(string Room_Id, [FromBody] UpdateRoomDTO updateRoom)
+        {
+
+            if (updateRoom == null) return BadRequest("Room Type not Created");
+            var result = await _roomService.UpdateRoom(Room_Id, updateRoom);
+            return Ok(result);
+
+        }
+
     }
 }

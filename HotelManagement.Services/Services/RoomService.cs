@@ -5,6 +5,7 @@ using HotelManagement.Core.DTOs;
 using HotelManagement.Core.IRepositories;
 using HotelManagement.Core.IServices;
 using HotelManagement.Infrastructure.Context;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,12 +20,14 @@ namespace HotelManagement.Services.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly HotelDbContext _hotelDbContext;
+        private readonly IRoomTypeRepository _roomTypeRepository;
 
-        public RoomService(IUnitOfWork unitOfWork, IMapper mapper, HotelDbContext hotelDbContext)
+        public RoomService(IUnitOfWork unitOfWork, IMapper mapper, HotelDbContext hotelDbContext, IRoomTypeRepository roomTypeRepository)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
             _hotelDbContext = hotelDbContext;
+            _roomTypeRepository = roomTypeRepository;
         }
 
         public async Task<Response<string>> AddRoom(string RoomType_ID, string Hotel_Name, AddRoomDto addRoomDto)
@@ -62,6 +65,7 @@ namespace HotelManagement.Services.Services
             }
         }
 
+
         public async Task<Response<GetRoomDto>> GetSingleRoom(string Id)
         {
             try
@@ -83,6 +87,43 @@ namespace HotelManagement.Services.Services
             await _unitOfWork.roomRepository.AddAsync(mappedRoom);
             return Response<Room>.Success(" Room Created Successfully", mappedRoom);
 
+        }      
+
+        
+
+        public async Task<Response<string>> AddRoomType(string Hotel_Id, RoomTypeDTO roomType)
+        {
+            var hotel = await _unitOfWork.hotelRepository.GetByIdAsync(x=>x.Id == Hotel_Id);
+            if (hotel == null)
+                return new Response<string>
+                {
+                    Data = Hotel_Id,
+                    Succeeded = false,
+                    StatusCode = 404,
+                    Message = "Hotel not found"
+                };
+            var newRoomType = _mapper.Map<RoomType>(roomType);
+            _roomTypeRepository.AddRoomType(Hotel_Id, newRoomType);
+            _unitOfWork.SaveChanges();
+            return Response<string>.Success("Created Successfully", roomType.Name);
+        }
+
+        public async Task<Response<string>> UpdateRoom(string Room_Id, UpdateRoomDTO updateRoom)
+        {
+            var updateroom = await _unitOfWork.roomRepository.GetByIdAsync(x=>x.Id==Room_Id);            
+            if(updateroom == null)               
+            {
+                return new Response<string>
+                {
+                    StatusCode = 404,
+                    Succeeded = false,
+                    Data = null,
+                    Message = "Room not found"
+                };
+            }
+            var newRoom = _mapper.Map<Room>(updateroom);
+            _unitOfWork.SaveChanges();
+            return Response<string>.Success("Updated Successfully", newRoom.Id);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace HotelManagement.Core.DTOs
         public bool IsBooked { get; set; } = false;
 
         public string RoomTypeId { get; set; } = string.Empty ;
-        public RoomType RoomTypes { get; set; }
+        public RoomTypeDTO RoomTypes { get; set; }
         public DateTime CreateAt { get; set; }
 
         public DateTime UpdateAt { get; set; }

@@ -1,4 +1,5 @@
 ﻿using HotelManagement.Core.Domains;
+using HotelManagement.Core.DTOs;
 using HotelManagement.Core.IRepositories;
 using HotelManagement.Infrastructure.Context;
 using System;
@@ -23,5 +24,7 @@ namespace HotelManagement.Infrastructure.Repositories
             room.RoomTypeId = Roomtype_ID;
             await AddAsync(room);
         }
+
+        
     }
 }
