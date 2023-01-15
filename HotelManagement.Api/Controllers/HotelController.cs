@@ -75,7 +75,7 @@ namespace HotelManagement.Api.Controllers
         public async Task<IActionResult> DeleteHotelById(string id)
         {
             var result = await _hotelService.DeleteHotelById(id);
-            if(!result.Succeeded) return BadRequest ();
+            if(!result.Succeeded) return BadRequest (result);
             return Ok(result);
         }
         [HttpPatch("{Id}")]
@@ -93,6 +93,14 @@ namespace HotelManagement.Api.Controllers
             // Otherwise, return a Bad Request response with the error message
             return BadRequest(result.Message);
         }
+        [HttpGet("By-State")]
+        public async Task<IActionResult> GetHotelByState(string State)
+        {
+            var result = await _hotelService.GetHotelByState(State);
+            if (!result.Succeeded) return BadRequest(result);
+            return Ok(result);
+        }
+
 
     }
 

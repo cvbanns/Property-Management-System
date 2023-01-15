@@ -1,7 +1,9 @@
 using FluentValidation.AspNetCore;
 using HotelManagement.Api.Extensions;
 using HotelManagement.Api.Policies;
+using HotelManagement.Core.IRepositories;
 using HotelManagement.Infrastructure.Context;
+using HotelManagement.Infrastructure.Repositories;
 using HotelManagement.Infrastructure.Seeding;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -13,6 +15,7 @@ namespace HotelManagement.Api
 {
     public class Program
     {
+        
         public static void Main(string[] args)
         {
 
@@ -25,6 +28,7 @@ namespace HotelManagement.Api
             //builder.Services.AddDbContextAndConfigurations(builder.Environment, config);
             //builder.Services.AddScoped<IHotelServices, HotelRepository>();
 
+            builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
             builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>()
                 .AddScoped<IUrlHelper>(x =>
                     x.GetRequiredService<IUrlHelperFactory>()
@@ -34,6 +38,7 @@ namespace HotelManagement.Api
 
             builder.Services.AddDbContext<HotelDbContext>(options => options.UseSqlServer
             (builder.Configuration.GetConnectionString("ConnStr")));
+            
 
             //builder.Services.AddControllers();
             // Configure Mailing Service
@@ -93,7 +98,7 @@ namespace HotelManagement.Api
                 app.UseSwaggerUI();
             }
 
-            //Seeder.SeedData(app).Wait();
+            Seeder.SeedData(app).Wait();
              
             app.UseHttpsRedirection();
 

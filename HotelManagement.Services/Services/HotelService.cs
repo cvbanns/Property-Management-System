@@ -162,11 +162,16 @@ namespace HotelManagement.Services.Services
         {
             try
             {
-                var hotelTodelete = _unitOfWork.hotelRepository.DeleteAsync<string>(id);
+                if (string.IsNullOrEmpty(id))
+                {
+                    return Response<string>.Fail("Please enter HotelID");
+                }
+                var hotelTodelete = await _unitOfWork.hotelRepository.GetByIdAsync (x=>x.Id == id);
                 if (hotelTodelete == null)
                     return Response<string>.Fail($"Hotel with {id} doesnot exist");
-                _unitOfWork.SaveChanges();
-                return Response<string>.Success($"Hotel with {id} Sucessful Deleted", id);
+                await _unitOfWork.hotelRepository.DeleteAsync<string>(id);
+                   _unitOfWork.SaveChanges();
+                return Response<string>.Success($"Hotel with {id} Sucessful Deleted", hotelTodelete.Name );
  
     }
             catch (Exception ex)
@@ -208,6 +213,22 @@ namespace HotelManagement.Services.Services
             catch (Exception ex)
             {
                 return Response<UpdateHotelDto>.Fail(ex.Message);
+            }
+        }
+        public async Task<Response<List<GetHotelByRatingsDto>>> GetHotelByState(string State)
+        {
+            try
+            {
+                var Hotels =await  _unitOfWork.hotelRepository.GetAllAsync(x=>x.State.ToLower().Trim()== State.ToLower().Trim());
+                var mappedHotels = _mapper.Map<List<GetHotelByRatingsDto>>(Hotels);
+
+                if (mappedHotels == null) return Response<List<GetHotelByRatingsDto>>.Fail($"Hotel Not Found in {State}");
+                return Response<List<GetHotelByRatingsDto>>.Success(State, mappedHotels);
+            }
+            catch (Exception ex)
+            {
+
+                return Response<List<GetHotelByRatingsDto>>.Fail(ex.Message);
             }
         }
 

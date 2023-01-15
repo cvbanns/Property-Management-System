@@ -2,13 +2,22 @@
 {
     public interface IUnitOfWork : IDisposable
     {
+
+      
+        //IReviewRepository ReviewRepository { get; }
+     
+
         IHotelRepository hotelRepository { get; }
         IRoomRepository roomRepository { get; }
         IAmenityRepository AmenityRepository { get; }
+        IWishlistRepository wishlist { get; }
         ICustomerRepository customerRepository { get; }
         
+        IManagerRepository managerRepository { get; }
+        IReviewRepository reviewRepository { get; }
 
         IBookingRepository bookingRepository { get; }
+        ITransactionsRepository transactionRepository { get; }
 
         void SaveChanges();
 
