@@ -83,8 +83,8 @@ namespace HotelManagement.Api.Controllers
 
         }
 
-        [HttpGet("{customerId}/hotel/{hotelId}/transactions"), Authorize(Roles = "Admin,Manager")]
-        public async Task<IActionResult> Get(string customerId, string hotelId, int pageNumber, int pageSize)
+        [HttpGet("{customerId}/hotel/{hotelId}/transactions") ]//Authorize(Roles = "Admin,Manager")]
+        public async Task<ActionResult<Response<PaymentDTO>>> Get(string customerId, string hotelId, int pageNumber, int pageSize)
         {
             try
             {
