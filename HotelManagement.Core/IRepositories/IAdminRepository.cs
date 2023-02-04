@@ -9,10 +9,11 @@ using System.Threading.Tasks;
 
 namespace HotelManagement.Core.IRepositories
 {
-    public interface IAdminRepository
+    public interface IAdminRepository : IGenericRepository<Manager>
     {
         Task<bool> CreateRole(RoleDTO role);
         Task<bool> AddUserRole(string userId, Roles role);
         Task<bool> RemoveUserRole(string userId, Roles role);
+      Task<string> GetAllManagers(Roles roles);
     }
 }

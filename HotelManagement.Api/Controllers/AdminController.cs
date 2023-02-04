@@ -2,6 +2,7 @@
 using HotelManagement.Core.Enums;
 using HotelManagement.Core.IRepositories;
 using HotelManagement.Core.IServices;
+using HotelManagement.Services.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -42,6 +43,13 @@ namespace HotelManagement.Api.Controllers
             var response = await _adminService.RemoveUserRole(userId, roles);
             if (response.Succeeded) return Ok(response);
             return BadRequest(response);
+        }
+
+        [HttpGet("Get-all-managers")]
+        public async Task<IActionResult> GetAllManagers(Roles roles)
+        {
+            var managers = await _adminService.GetAllManagers(roles);
+            return Ok(managers);
         }
 
         //I added this comment

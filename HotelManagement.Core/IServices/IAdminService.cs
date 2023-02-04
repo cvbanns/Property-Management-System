@@ -13,5 +13,7 @@ namespace HotelManagement.Core.IServices
         Task<Response<string>> CreateRole(RoleDTO role);
         Task<Response<string>> AddUserRole(string userId, Roles role);
         Task<Response<string>> RemoveUserRole(string userId, Roles role);
+        Task<Response<string>> GetAllManagers(Roles role);
+        
     }
 }

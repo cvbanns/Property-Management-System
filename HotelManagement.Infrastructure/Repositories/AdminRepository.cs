@@ -9,18 +9,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using HotelManagement.Infrastructure.Context;
+using System.Data.Entity;
 
 namespace HotelManagement.Infrastructure.Repositories
 {
-    public class AdminRepository : IAdminRepository
+    public class AdminRepository : GenericRepository<Manager>, IAdminRepository
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<AppUser> _userManager;
+        private readonly HotelDbContext _hotelDbContext;
 
-        public AdminRepository(RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager)
+        public AdminRepository(RoleManager<IdentityRole> roleManager, UserManager<AppUser> userManager, HotelDbContext hotelDbContext) : base(hotelDbContext)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            _hotelDbContext = hotelDbContext;
         }
 
         public async Task<bool> CreateRole(RoleDTO role)
@@ -55,6 +59,21 @@ namespace HotelManagement.Infrastructure.Repositories
             var result = await _userManager.RemoveFromRoleAsync(user, role.ToString());
          
             return result.Succeeded;
+        }
+
+        public async Task<Manager> GetAllManager(string Id, Roles roles)
+        {
+
+            var result = _hotelDbContext.Managers
+                            .Include(c => c.AppUser)
+                            .Where(c => c.Id == Id)
+                            .FirstOrDefault(m => m.Id == Id);
+            return result;
+        }
+
+        public Task<string> GetAllManagers(Roles roles)
+        {
+            throw new NotImplementedException();
         }
     }
 }

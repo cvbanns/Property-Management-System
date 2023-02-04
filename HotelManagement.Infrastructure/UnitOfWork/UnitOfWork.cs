@@ -80,6 +80,8 @@ namespace HotelManagement.Infrastructure.UnitOfWork
         public IRateHotelRepository rateHotelRepository =>
          _rateHotelRepository ??= new RateHotelRepository(_hotelDbContext);
 
+        public IAdminRepository adminRepository => throw new NotImplementedException();
+
         public void BeginTransaction()
 
 		{

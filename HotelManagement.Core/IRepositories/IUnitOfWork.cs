@@ -14,6 +14,7 @@
         ICustomerRepository customerRepository { get; }
         IManagerRequestRepository managerRequestRepository { get; }
         IManagerRepository managerRepository { get; }
+        IAdminRepository adminRepository { get; }
         IReviewRepository reviewRepository { get; }
 
         IBookingRepository bookingRepository { get; }
